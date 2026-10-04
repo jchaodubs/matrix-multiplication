@@ -11,6 +11,7 @@ void getDimensions(int &aRows, int &aCols, int &bRows, int &bCols);
 void createMatrix(const int &rows, const int &cols, vector<vector<double>> &matrix);
 void calculateMatrixProduct(vector<vector<double>> &aMatrix, vector<vector<double>> &bMatrix,   vector<vector<double>> &matrixProduct
 );
+double dotProduct(vector<double> &aVector, vector<double> &bVector);
 
 int main() {
 //   int aRows{};
@@ -37,18 +38,9 @@ int main() {
 
 }
 
-
-void calculateMatrixProduct(vector<vector<double>> &aMatrix, vector<vector<double>> &bMatrix,   vector<vector<double>> &matrixProduct){
-    // const int productRows = aMatrix.size();
-    // const int productCols = bMatrix.at(0).size();
-    for(const vector<double> &row : aMatrix){
-        for(const int &col : row){
-
-        }
-    }
+double dotProduct(vector<double> &aVector, vector<double> &bVector){
+    return 1.0;
 }
-
-
 
 void getDimensions(int &aRows, int &aCols, int &bRows, int &bCols) {
   while (true) {
@@ -99,5 +91,15 @@ void createMatrix(const int &rows, const int &cols, vector<vector<double>> &matr
             row.push_back(temp);
         }
         matrix.push_back(row);
+    }
+}
+
+void calculateMatrixProduct(vector<vector<double>> &aMatrix, vector<vector<double>> &bMatrix,   vector<vector<double>> &matrixProduct){
+    const int aMatrixRows = aMatrix.size();
+    const int bMatrixCols = bMatrix[0].size();
+    for(int aRow = 0; aRow < aMatrixRows - 1; aRow++){
+        for(int bCol = 0; bCol < bMatrixCols - 1; bCol++){
+            matrixProduct[aRow][bCol] = dotProduct(aMatrix[aRow], bMatrix[bCol]);
+        }
     }
 }
