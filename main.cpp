@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <unistd.h>
+#include <vector>
 
 using std::cin;
 using std::cout;
@@ -8,38 +8,39 @@ using std::endl;
 using std::vector;
 
 void getDimensions(int &aRows, int &aCols, int &bRows, int &bCols);
-void createMatrix(const int &rows, const int &cols, vector<vector<double>> &matrix);
-void calculateMatrixProduct(vector<vector<double>> &aMatrix, vector<vector<double>> &bMatrix,   vector<vector<double>> &matrixProduct
-);
-double dotProduct(vector<double> &aVector, vector<double> &bVector);
+void createMatrix(const int &rows, const int &cols,
+                  vector<vector<double>> &matrix);
+void createEmptyMatrix(const int &rows, const int &cols,
+                       vector<vector<double>> &matrix);
+void calculateMatrixProduct(vector<vector<double>> &aMatrix,
+                            vector<vector<double>> &bMatrix,
+                            vector<vector<double>> &matrixProduct);
+double dotProduct(const vector<double> &aVector, const int &bCol,
+                  const vector<vector<double>> &bMatrix);
+void printMatrix(vector<vector<double>> &matrixProduct);
 
 int main() {
-//   int aRows{};
-//   int aCols{};
-//   int bRows{};
-//   int bCols{};
-  int aRows = 2;
-  int aCols = 3;
-  int bRows = 3;
-  int bCols = 2;
-  //getDimensions(aRows, aCols, bRows, bCols);
-  cout << "Enter Matrix A's values now, pls use numbers, I too lazy to check" << endl;
+  int aRows{};
+  int aCols{};
+  int bRows{};
+  int bCols{};
+  getDimensions(aRows, aCols, bRows, bCols);
+  cout << "Enter Matrix A's values now, pls use numbers, I too lazy to check"
+       << endl;
   vector<vector<double>> aMatrix;
   createMatrix(aRows, aCols, aMatrix);
-    cout << "Enter Matrix B's values now, pls use numbers, I too lazy to check" << endl;
+  cout << "Enter Matrix B's values now, pls use numbers, I too lazy to check"
+       << endl;
   vector<vector<double>> bMatrix;
   createMatrix(bRows, bCols, bMatrix);
 
   cout << "Deleting System32...." << endl;
-  sleep(5);
+  sleep(2);
 
   vector<vector<double>> matrixProduct;
+  createEmptyMatrix(aRows, bCols, matrixProduct);
   calculateMatrixProduct(aMatrix, bMatrix, matrixProduct);
-
-}
-
-double dotProduct(vector<double> &aVector, vector<double> &bVector){
-    return 1.0;
+  printMatrix(matrixProduct);
 }
 
 void getDimensions(int &aRows, int &aCols, int &bRows, int &bCols) {
@@ -80,26 +81,56 @@ void getDimensions(int &aRows, int &aCols, int &bRows, int &bCols) {
   return;
 }
 
-void createMatrix(const int &rows, const int &cols, vector<vector<double>> &matrix){
-    for(int i = 0; i < rows; i++){
-        vector<double> row;
-        cout << "For row " << i << ":" << endl;
-        for(int j = 0; j < cols; j++){
-            double temp{};
-            cout << "Enter value for indice " << j << ": ";
-            cin >> temp;
-            row.push_back(temp);
-        }
-        matrix.push_back(row);
+void createMatrix(const int &rows, const int &cols,
+                  vector<vector<double>> &matrix) {
+  for (int i = 0; i < rows; i++) {
+    vector<double> row;
+    cout << "For row " << i << ":" << endl;
+    for (int j = 0; j < cols; j++) {
+      double temp{};
+      cout << "Enter value for indice " << j << ": ";
+      cin >> temp;
+      row.push_back(temp);
     }
+    matrix.push_back(row);
+  }
 }
 
-void calculateMatrixProduct(vector<vector<double>> &aMatrix, vector<vector<double>> &bMatrix,   vector<vector<double>> &matrixProduct){
-    const int aMatrixRows = aMatrix.size();
-    const int bMatrixCols = bMatrix[0].size();
-    for(int aRow = 0; aRow < aMatrixRows - 1; aRow++){
-        for(int bCol = 0; bCol < bMatrixCols - 1; bCol++){
-            matrixProduct[aRow][bCol] = dotProduct(aMatrix[aRow], bMatrix[bCol]);
-        }
+void createEmptyMatrix(const int &rows, const int &cols,
+                       vector<vector<double>> &matrix) {
+  for (int i = 0; i < rows; i++) {
+    vector<double> row(cols, 0);
+    matrix.push_back(row);
+  }
+}
+
+void calculateMatrixProduct(vector<vector<double>> &aMatrix,
+                            vector<vector<double>> &bMatrix,
+                            vector<vector<double>> &matrixProduct) {
+  const int aMatrixRows = aMatrix.size();
+  const int bMatrixCols = bMatrix[0].size();
+  for (int aRow = 0; aRow < aMatrixRows; aRow++) {
+    for (int bCol = 0; bCol < bMatrixCols; bCol++) {
+      matrixProduct[aRow][bCol] = dotProduct(aMatrix[aRow], bCol, bMatrix);
     }
+  }
+}
+
+double dotProduct(const vector<double> &aVector, const int &bCol,
+                  const vector<vector<double>> &bMatrix) {
+  double product{};
+  const int &vectorSize = aVector.size();
+  for (int i = 0; i < vectorSize; i++) {
+    product += aVector[i] * bMatrix[i][bCol];
+  }
+  return product;
+}
+
+void printMatrix(vector<vector<double>> &matrixProduct) {
+  for (const vector<double> &vector : matrixProduct) {
+    for (const auto &val : vector) {
+      cout << val << " ";
+    }
+    cout << endl;
+  }
 }
